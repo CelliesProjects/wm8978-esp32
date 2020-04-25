@@ -3,38 +3,39 @@
 
 #include <stdio.h>
 
-#define WM8978_ADDR   0X1A	//WM8978��������ַ,�̶�Ϊ0X1A 
+#define WM8978_ADDR   0X1A  //WM8978��������ַ,�̶�Ϊ0X1A
 
-#define EQ1_80Hz		  0X00
-#define EQ1_105Hz		  0X01
-#define EQ1_135Hz		  0X02
-#define EQ1_175Hz		  0X03
+#define EQ1_80Hz      0X00
+#define EQ1_105Hz     0X01
+#define EQ1_135Hz     0X02
+#define EQ1_175Hz     0X03
 
-#define EQ2_230Hz		  0X00
-#define EQ2_300Hz		  0X01
-#define EQ2_385Hz		  0X02
-#define EQ2_500Hz		  0X03
+#define EQ2_230Hz     0X00
+#define EQ2_300Hz     0X01
+#define EQ2_385Hz     0X02
+#define EQ2_500Hz     0X03
 
-#define EQ3_650Hz 	  0X00
-#define EQ3_850Hz		  0X01
-#define EQ3_1100Hz		0X02
-#define EQ3_14000Hz		0X03
+#define EQ3_650Hz     0X00
+#define EQ3_850Hz     0X01
+#define EQ3_1100Hz    0X02
+#define EQ3_14000Hz   0X03
 
-#define EQ4_1800Hz		0X00
-#define EQ4_2400Hz		0X01
-#define EQ4_3200Hz		0X02
-#define EQ4_4100Hz		0X03
+#define EQ4_1800Hz    0X00
+#define EQ4_2400Hz    0X01
+#define EQ4_3200Hz    0X02
+#define EQ4_4100Hz    0X03
 
-#define EQ5_5300Hz		0X00
-#define EQ5_6900Hz		0X01
-#define EQ5_9000Hz		0X02
-#define EQ5_11700Hz		0X03
+#define EQ5_5300Hz    0X00
+#define EQ5_6900Hz    0X01
+#define EQ5_9000Hz    0X02
+#define EQ5_11700Hz   0X03
 
 class WM8978
 {
   public:
     WM8978() {}
     ~WM8978() {}
+    void setMCLKgpio0();
     bool begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency = 100000);
     void ADDA_Cfg(uint8_t dacen, uint8_t adcen);
     void Input_Cfg(uint8_t micen, uint8_t lineinen, uint8_t auxen);
