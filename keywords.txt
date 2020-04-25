@@ -1,0 +1,44 @@
+#######################################
+# syntax coloring map for sensorState
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+wm8978	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+setMCLKgpio0	KEYWORD2
+begin	KEYWORD2
+ADDA_Cfg	KEYWORD2
+Input_Cfg	KEYWORD2
+Output_Cfg	KEYWORD2
+MIC_Gain	KEYWORD2
+LINEIN_Gain	KEYWORD2
+AUX_Gain	KEYWORD2
+HPvol_Set	KEYWORD2
+SPKvol_Set	KEYWORD2
+I2S_Cfg	 KEYWORD2
+Set_3D	KEYWORD2
+EQ_3D_Dir	KEYWORD2
+EQ1_Set	KEYWORD2
+EQ2_Set	KEYWORD2
+EQ3_Set	KEYWORD2
+EQ4_Set	KEYWORD2
+EQ5_Set	KEYWORD2
+Noise_Set	KEYWORD2
+ALC_Set	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+######################################
+wm8978	KEYWORD3
+WM8978	KEYWORD3
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+WM8978_ADDR	LITERAL1
+
