@@ -37,24 +37,24 @@ class WM8978
     ~WM8978() {}
     void setPinClockFreq(const uint8_t pin, const double freq, const uint8_t ch = 0);
     bool begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency = 100000);
-    void ADDA_Cfg(uint8_t dacen, uint8_t adcen);
-    void Input_Cfg(uint8_t micen, uint8_t lineinen, uint8_t auxen);
-    void Output_Cfg(uint8_t dacen, uint8_t bpsen);
-    void MIC_Gain(uint8_t gain);
-    void LINEIN_Gain(uint8_t gain);
-    void AUX_Gain(uint8_t gain);
-    void HPvol_Set(uint8_t voll, uint8_t volr);
-    void SPKvol_Set(uint8_t volx);
-    void I2S_Cfg(uint8_t fmt, uint8_t len);
-    void Set_3D(uint8_t depth);
-    void EQ_3D_Dir(uint8_t dir);
-    void EQ1_Set(uint8_t cfreq, uint8_t gain);
-    void EQ2_Set(uint8_t cfreq, uint8_t gain);
-    void EQ3_Set(uint8_t cfreq, uint8_t gain);
-    void EQ4_Set(uint8_t cfreq, uint8_t gain);
-    void EQ5_Set(uint8_t cfreq, uint8_t gain);
-    void Noise_Set(uint8_t enable, uint8_t gain);
-    void ALC_Set(uint8_t enable, uint8_t maxgain, uint8_t mingain);
+    void cfgADDA(uint8_t dacen, uint8_t adcen);
+    void cfgInput(uint8_t micen, uint8_t lineinen, uint8_t auxen);
+    void cfgOutput(uint8_t dacen, uint8_t bpsen);
+    void cfgI2S(uint8_t fmt, uint8_t len);
+    void setMICgain(uint8_t gain);
+    void setLINEINgain(uint8_t gain);
+    void setAUXgain(uint8_t gain);
+    void setHPvol(uint8_t voll, uint8_t volr);
+    void setSPKvol(uint8_t volx);
+    void set3D(uint8_t depth);
+    void set3Ddir(uint8_t dir);
+    void setEQ1(uint8_t cfreq, uint8_t gain);
+    void setEQ2(uint8_t cfreq, uint8_t gain);
+    void setEQ3(uint8_t cfreq, uint8_t gain);
+    void setEQ4(uint8_t cfreq, uint8_t gain);
+    void setEQ5(uint8_t cfreq, uint8_t gain);
+    void setNoise(uint8_t enable, uint8_t gain);
+    void setALC(uint8_t enable, uint8_t maxgain, uint8_t mingain);
 
   private:
     uint8_t Init(void);

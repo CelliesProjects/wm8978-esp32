@@ -73,7 +73,7 @@ uint16_t WM8978::Read_Reg(uint8_t reg)
 //WM8978 DAC/ADC配置
 //adcen:adc使能(1)/关闭(0)
 //dacen:dac使能(1)/关闭(0)
-void WM8978::ADDA_Cfg(uint8_t dacen, uint8_t adcen)
+void WM8978::cfgADDA(uint8_t dacen, uint8_t adcen)
 {
   uint16_t regval;
   regval = WM8978::Read_Reg(3); //读取R3
@@ -89,7 +89,7 @@ void WM8978::ADDA_Cfg(uint8_t dacen, uint8_t adcen)
 //micen:MIC开启(1)/关闭(0)
 //lineinen:Line In开启(1)/关闭(0)
 //auxen:aux开启(1)/关闭(0)
-void WM8978::Input_Cfg(uint8_t micen, uint8_t lineinen, uint8_t auxen)
+void WM8978::cfgInput(uint8_t micen, uint8_t lineinen, uint8_t auxen)
 {
   uint16_t regval;
   regval = WM8978::Read_Reg(2); //读取R2
@@ -102,15 +102,15 @@ void WM8978::Input_Cfg(uint8_t micen, uint8_t lineinen, uint8_t auxen)
   else regval &= ~(3 << 4 | 3 << 0);  //关闭LIN2INPPGA,LIP2INPGA,RIN2INPPGA,RIP2INPGA.
   Write_Reg(44, regval); //设置R44
 
-  if (lineinen)WM8978::LINEIN_Gain(5); //LINE IN 0dB增益
-  else WM8978::LINEIN_Gain(0);  //关闭LINE IN
-  if (auxen)WM8978::AUX_Gain(7); //AUX 6dB增益
-  else WM8978::AUX_Gain(0); //关闭AUX输入
+  if (lineinen)WM8978::setLINEINgain(5); //LINE IN 0dB增益
+  else WM8978::setLINEINgain(0);  //关闭LINE IN
+  if (auxen)WM8978::setAUXgain(7); //AUX 6dB增益
+  else WM8978::setAUXgain(0); //关闭AUX输入
 }
 //WM8978 输出配置
 //dacen:DAC输出(放音)开启(1)/关闭(0)
 //bpsen:Bypass输出(录音,包括MIC,LINE IN,AUX等)开启(1)/关闭(0)
-void WM8978::Output_Cfg(uint8_t dacen, uint8_t bpsen)
+void WM8978::cfgOutput(uint8_t dacen, uint8_t bpsen)
 {
   uint16_t regval = 0;
   if (dacen) regval |= 1 << 0;  //DAC输出使能
@@ -124,7 +124,7 @@ void WM8978::Output_Cfg(uint8_t dacen, uint8_t bpsen)
 }
 //WM8978 MIC增益设置(不包括BOOST的20dB,MIC-->ADC输入部分的增益)
 //gain:0~63,对应-12dB~35.25dB,0.75dB/Step
-void WM8978::MIC_Gain(uint8_t gain)
+void WM8978::setMICgain(uint8_t gain)
 {
   gain &= 0X3F;
   Write_Reg(45, gain);    //R45,左通道PGA设置
@@ -132,7 +132,7 @@ void WM8978::MIC_Gain(uint8_t gain)
 }
 //WM8978 L2/R2(也就是Line In)增益设置(L2/R2-->ADC输入部分的增益)
 //gain:0~7,0表示通道禁止,1~7,对应-12dB~6dB,3dB/Step
-void WM8978::LINEIN_Gain(uint8_t gain)
+void WM8978::setLINEINgain(uint8_t gain)
 {
   uint16_t regval;
   gain &= 0X07;
@@ -145,7 +145,7 @@ void WM8978::LINEIN_Gain(uint8_t gain)
 }
 //WM8978 AUXR,AUXL(PWM音频部分)增益设置(AUXR/L-->ADC输入部分的增益)
 //gain:0~7,0表示通道禁止,1~7,对应-12dB~6dB,3dB/Step
-void WM8978::AUX_Gain(uint8_t gain)
+void WM8978::setAUXgain(uint8_t gain)
 {
   uint16_t regval;
   gain &= 0X07;
@@ -159,7 +159,7 @@ void WM8978::AUX_Gain(uint8_t gain)
 //设置I2S工作模式
 //fmt:0,LSB(右对齐);1,MSB(左对齐);2,飞利浦标准I2S;3,PCM/DSP;
 //len:0,16位;1,20位;2,24位;3,32位;
-void WM8978::I2S_Cfg(uint8_t fmt, uint8_t len)
+void WM8978::cfgI2S(uint8_t fmt, uint8_t len)
 {
   fmt &= 0X03;
   len &= 0X03; //限定范围
@@ -169,7 +169,7 @@ void WM8978::I2S_Cfg(uint8_t fmt, uint8_t len)
 //设置耳机左右声道音量
 //voll:左声道音量(0~63)
 //volr:右声道音量(0~63)
-void WM8978::HPvol_Set(uint8_t voll, uint8_t volr)
+void WM8978::setHPvol(uint8_t voll, uint8_t volr)
 {
   voll &= 0X3F;
   volr &= 0X3F; //限定范围
@@ -180,7 +180,7 @@ void WM8978::HPvol_Set(uint8_t voll, uint8_t volr)
 }
 //设置喇叭音量
 //voll:左声道音量(0~63)
-void WM8978::SPKvol_Set(uint8_t volx)
+void WM8978::setSPKvol(uint8_t volx)
 {
   volx &= 0X3F; //限定范围
   if (volx == 0)volx |= 1 << 6; //音量为0时,直接mute
@@ -190,7 +190,7 @@ void WM8978::SPKvol_Set(uint8_t volx)
 
   //设置3D环绕声
   //depth:0~15(3D强度,0最弱,15最强)
-  void WM8978::Set_3D(uint8_t depth)
+  void WM8978::set3D(uint8_t depth)
   {
   depth&=0XF;//限定范围
   Write_Reg(41,depth);  //R41,3D环绕设置
@@ -199,7 +199,7 @@ void WM8978::SPKvol_Set(uint8_t volx)
 //设置EQ/3D作用方向
 //dir:0,在ADC起作用
 //    1,在DAC起作用(默认)
-void WM8978::EQ_3D_Dir(uint8_t dir)
+void WM8978::set3Ddir(uint8_t dir)
 {
   uint16_t regval;
   regval = WM8978::Read_Reg(0X12);
@@ -211,7 +211,7 @@ void WM8978::EQ_3D_Dir(uint8_t dir)
 //设置EQ1
 //cfreq:截止频率,0~3,分别对应:80/105/135/175Hz
 //gain:增益,0~24,对应-12~+12dB
-void WM8978::EQ1_Set(uint8_t cfreq, uint8_t gain)
+void WM8978::setEQ1(uint8_t cfreq, uint8_t gain)
 {
   uint16_t regval;
   cfreq &= 0X3; //限定范围
@@ -226,7 +226,7 @@ void WM8978::EQ1_Set(uint8_t cfreq, uint8_t gain)
 //设置EQ2
 //cfreq:中心频率,0~3,分别对应:230/300/385/500Hz
 //gain:增益,0~24,对应-12~+12dB
-void WM8978::EQ2_Set(uint8_t cfreq, uint8_t gain)
+void WM8978::setEQ2(uint8_t cfreq, uint8_t gain)
 {
   uint16_t regval = 0;
   cfreq &= 0X3; //限定范围
@@ -239,7 +239,7 @@ void WM8978::EQ2_Set(uint8_t cfreq, uint8_t gain)
 //设置EQ3
 //cfreq:中心频率,0~3,分别对应:650/850/1100/1400Hz
 //gain:增益,0~24,对应-12~+12dB
-void WM8978::EQ3_Set(uint8_t cfreq, uint8_t gain)
+void WM8978::setEQ3(uint8_t cfreq, uint8_t gain)
 {
   uint16_t regval = 0;
   cfreq &= 0X3; //限定范围
@@ -252,7 +252,7 @@ void WM8978::EQ3_Set(uint8_t cfreq, uint8_t gain)
 //设置EQ4
 //cfreq:中心频率,0~3,分别对应:1800/2400/3200/4100Hz
 //gain:增益,0~24,对应-12~+12dB
-void WM8978::EQ4_Set(uint8_t cfreq, uint8_t gain)
+void WM8978::setEQ4(uint8_t cfreq, uint8_t gain)
 {
   uint16_t regval = 0;
   cfreq &= 0X3; //限定范围
@@ -265,7 +265,7 @@ void WM8978::EQ4_Set(uint8_t cfreq, uint8_t gain)
 //设置EQ5
 //cfreq:中心频率,0~3,分别对应:5300/6900/9000/11700Hz
 //gain:增益,0~24,对应-12~+12dB
-void WM8978::EQ5_Set(uint8_t cfreq, uint8_t gain)
+void WM8978::setEQ5(uint8_t cfreq, uint8_t gain)
 {
   uint16_t regval = 0;
   cfreq &= 0X3; //限定范围
@@ -276,7 +276,7 @@ void WM8978::EQ5_Set(uint8_t cfreq, uint8_t gain)
   Write_Reg(22, regval); //R22,EQ5设置
 }
 
-void WM8978::ALC_Set(uint8_t enable, uint8_t maxgain, uint8_t mingain)
+void WM8978::setALC(uint8_t enable, uint8_t maxgain, uint8_t mingain)
 {
   uint16_t regval;
 
@@ -290,7 +290,7 @@ void WM8978::ALC_Set(uint8_t enable, uint8_t maxgain, uint8_t mingain)
   Write_Reg(32, regval);
 }
 
-void WM8978::Noise_Set(uint8_t enable, uint8_t gain)
+void WM8978::setNoise(uint8_t enable, uint8_t gain)
 {
   uint16_t regval;
 
@@ -326,20 +326,20 @@ bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequenc
 
   // checkout https://github.com/GOLDELEC/Huan/blob/master/main/wm8978.c
 
-  I2S_Cfg(2, 0); //Philips 16bit
-  ADDA_Cfg(1, 1);   //Enable ADC DAC
-  Input_Cfg(1, 0, 0);  //Mic enabled
-  MIC_Gain(0);
-  AUX_Gain(0);
-  LINEIN_Gain(0);
-  SPKvol_Set(16);
-  HPvol_Set(10, 10); //0-63
-  EQ_3D_Dir(0);
-  EQ1_Set(0, 24);
-  EQ2_Set(0, 24);
-  EQ3_Set(0, 24);
-  EQ4_Set(0, 24);
-  EQ5_Set(0, 24);
-  Output_Cfg(1, 0); //Output enabled
+  cfgI2S(2, 0); //Philips 16bit
+  cfgADDA(1, 1);   //Enable ADC DAC
+  cfgInput(1, 0, 0);  //Mic enabled
+  setMICgain(0);
+  setAUXgain(0);
+  setLINEINgain(0);
+  setSPKvol(16);
+  setHPvol(10, 10); //0-63
+  set3Ddir(0);
+  setEQ1(0, 24);
+  setEQ2(0, 24);
+  setEQ3(0, 24);
+  setEQ4(0, 24);
+  setEQ5(0, 24);
+  cfgOutput(1, 0); //Output enabled
   return true;
 } //begin
