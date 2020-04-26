@@ -302,10 +302,11 @@ void WM8978::Noise_Set(uint8_t enable, uint8_t gain)
   Write_Reg(35, regval); //R18,EQ1设置
 }
 
-void WM8978::setMCLKgpio0() {
-  //set clock on pin 0 - https://www.esp32.com/viewtopic.php?t=3060
-  PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
-  REG_WRITE(PIN_CTRL, 0);
+void WM8978::setPinClockFreq(const uint8_t pin, const double freq, const uint8_t ch) {
+  if (0 == freq && ledcReadFreq(ch)) return ledcDetachPin(ch);
+  ledcAttachPin(pin, ch);
+  ledcSetup(ch, freq, 1);
+  ledcWrite(ch,1);
 }
 
 bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency) {
