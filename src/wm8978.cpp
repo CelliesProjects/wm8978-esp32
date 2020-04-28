@@ -38,8 +38,6 @@ uint8_t WM8978::Write_Reg(uint8_t reg, uint16_t val)
   return 0;
 }
 
-// checkout: https://github.com/GOLDELEC/Huan/blob/master/main/wm8978.c
-
 //WM8978 init
 //返回值:0,初始化正常
 //    其他,错误代码
@@ -302,44 +300,47 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
   Write_Reg(35, regval); //R18,EQ1设置
 }
 
-void WM8978::setPinClockFreq(const uint8_t pin, const double freq, const uint8_t ch) {
-  if (0 == freq && ledcReadFreq(ch)) return ledcDetachPin(ch);
-  ledcAttachPin(pin, ch);
-  ledcSetup(ch, freq, 1);
-  ledcWrite(ch,1);
+double WM8978::setPinClockFreq(const uint8_t pin, const double freq, const uint8_t ch) {
+  const double MAX_FREQ = 40 * 1000 * 1000;
+  if (0 == freq) {
+    if (ledcReadFreq(ch)) ledcDetachPin(ch);
+    return 0;
+  }
+  else {
+    if (freq < 1 || freq > MAX_FREQ) return 0;
+    ledcAttachPin(pin, ch);
+    double retval = ledcSetup(ch, freq, 1);
+    if (!retval) return 0;
+    ledcWrite(ch,1);
+    return retval;
+  }
 }
 
 bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency) {
-  ESP_LOGD(TAG, "WM8978 I2C init SDA=%i SCL=%i frequency=%i", sda, scl, frequency);
-
+  ESP_LOGD(TAG, "WM8978 I2C init sda=%i scl=%i frequency=%i", sda, scl, frequency);
   if (!Wire.begin(sda, scl, frequency)) {
     ESP_LOGE(TAG, "WM8978 Wire setup error");
     return false;
   }
-
   int err = Init();
   if (err) {
     ESP_LOGE(TAG, "WM8978 I2C init err:%X", err);
     return false;
   }
-
-
-  // checkout https://github.com/GOLDELEC/Huan/blob/master/main/wm8978.c
-
   cfgI2S(2, 0); //Philips 16bit
   cfgADDA(1, 1);   //Enable ADC DAC
-  cfgInput(1, 0, 0);  //Mic enabled
+  cfgInput(0, 0, 0);  //mic, linein, aux - Note: M5Stack node has only internal microphones connected
   setMICgain(0);
   setAUXgain(0);
   setLINEINgain(0);
-  setSPKvol(16);
-  setHPvol(10, 10); //0-63
+  setSPKvol(0); //0-63
+  setHPvol(0, 0); //0-63
   set3Ddir(0);
   setEQ1(0, 24);
   setEQ2(0, 24);
   setEQ3(0, 24);
   setEQ4(0, 24);
   setEQ5(0, 24);
-  cfgOutput(1, 0); //Output enabled
+  cfgOutput(1, 0); //Output enabled, bypass disabled
   return true;
 } //begin
