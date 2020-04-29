@@ -5,7 +5,7 @@ Arduino IDE library for wm8978 codec on ESP32 mcu. Tested/works on M5stack Node
 To enable `ESP_LOGx` messages on Serial compile with `Tools->Core Debug Level` set to `Info`.
 
 ```c++
-#include <wm8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
+#include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 #include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
 
 /* M5Stack Node I2C pins */

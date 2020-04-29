@@ -1,4 +1,4 @@
-#include <wm8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
+#include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 #include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
 
 /* M5Stack Node WM8978 I2C pins */
