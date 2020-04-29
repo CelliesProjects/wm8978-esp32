@@ -26,7 +26,7 @@ void setup() {
   }
 
   /* Setup wm8978 MCLK on gpio - for example M5Stack Node needs this clock on gpio 0 */
-  double retval = dac.setPinClockFreq(I2S_MCLKPIN, I2S_MFREQ);
+  double retval = dac.setPinMCLK(I2S_MCLKPIN, I2S_MFREQ);
   if (!retval)
     ESP_LOGE(TAG, "Could not set %.2fMHz clock signal on GPIO %i", I2S_MFREQ / (1000.0 * 1000.0), I2S_MCLKPIN);
   else
