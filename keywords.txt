@@ -10,7 +10,7 @@ WM8978	KEYWORD1
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-setPinClockFreq	KEYWORD2
+setPinMCLK	KEYWORD2
 begin	KEYWORD2
 cfgADDA	KEYWORD2
 cfgInput	KEYWORD2
@@ -34,7 +34,6 @@ setALC	KEYWORD2
 #######################################
 # Instances (KEYWORD2)
 ######################################
-wm8978	KEYWORD3
 WM8978	KEYWORD3
 
 #######################################

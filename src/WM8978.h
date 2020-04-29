@@ -35,7 +35,7 @@ class WM8978
   public:
     WM8978() {}
     ~WM8978() {}
-    double setPinClockFreq(const uint8_t pin, const double freq, const uint8_t ch = 0);
+    double setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch = 0);
     bool begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency = 100000);
     void cfgADDA(uint8_t dacen, uint8_t adcen);
     void cfgInput(uint8_t micen, uint8_t lineinen, uint8_t auxen);

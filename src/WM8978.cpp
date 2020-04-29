@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <Arduino.h>
 #include <Wire.h>
-#include "wm8978.h"
+#include "WM8978.h"
 
 
 // WM8978 register value buffer zone (total 58 registers 0 to 57), occupies 116 bytes of memory
@@ -300,7 +300,7 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
   Write_Reg(35, regval); //R18,EQ1设置
 }
 
-double WM8978::setPinClockFreq(const uint8_t pin, const double freq, const uint8_t ch) {
+double WM8978::setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch) {
   const double MAX_FREQ = 40 * 1000 * 1000;
   if (0 == freq) {
     if (ledcReadFreq(ch)) ledcDetachPin(ch);
