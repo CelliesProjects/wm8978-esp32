@@ -1,5 +1,5 @@
-#include <Audio.h>
 #include <wm8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
+#include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
 
 /* M5Stack Node WM8978 I2C pins */
 #define I2C_SDA     21
@@ -20,15 +20,21 @@ Audio audio;
 
 void setup() {
   /* Setup wm8978 I2C interface */
-  if (!dac.begin(I2C_SDA, I2C_SCL)) {                              
+  if (!dac.begin(I2C_SDA, I2C_SCL)) {
     ESP_LOGE(TAG, "Error setting up dac. System halted");
     while (1) delay(100);
   }
+
   /* Setup wm8978 MCLK on gpio - for example M5Stack Node needs this clock on gpio 0 */
-  dac.setPinClockFreq(I2S_MCLKPIN, I2S_MFREQ);                     
+  double retval = dac.setPinClockFreq(I2S_MCLKPIN, I2S_MFREQ);
+  if (!retval)
+    ESP_LOGE(TAG, "Could not set %.2fMHz clock signal on GPIO %i", I2S_MFREQ / (1000.0 * 1000.0), I2S_MCLKPIN);
+  else
+    ESP_LOGI(TAG, "Set %.2fMHz clock signal on GPIO %i", retval / (1000.0 * 1000.0), I2S_MCLKPIN);
+
 
   /* Setup wm8978 I2S interface */
-  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN);             
+  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN);
 
   WiFi.begin("xxx", "xxx");
   while (!WiFi.isConnected()) {
