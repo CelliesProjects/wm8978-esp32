@@ -1,4 +1,7 @@
 # wm8978-esp32
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e81fc45de095479cba43ecff7cf94b3b)](https://app.codacy.com/manual/CelliesProjects/wm8978-esp32?utm_source=github.com&utm_medium=referral&utm_content=CelliesProjects/wm8978-esp32&utm_campaign=Badge_Grade_Dashboard)
+
 Arduino IDE library for wm8978 codec on ESP32 mcu. Tested/works on M5stack Node
 
 ### Use case:
