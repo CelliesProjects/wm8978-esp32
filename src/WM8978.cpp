@@ -301,25 +301,22 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
 }
 
 /* sets a clock signal on 'pin' with frequency 'freq' and use pwm channel 'ch' */
-/* returns the actual set frequency */
-/* calling this function with the frequency set to 0 will stop a running mclk signal */
+/* returns the actual set frequency or 0 if an error occurs */
+/* calling this function with the frequency set to 0 will stop a running mclk signal (and return 0)*/
 double WM8978::setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch) {
   const double MAX_FREQ = 40 * 1000 * 1000;
 
-  static struct {
-    int pin{-1}; // -1 means clock is not running
-    uint8_t channel;
-  } _mclk;
+  static int mclkPin{-1}; // -1 means clock is not running
 
   /* switch off mclk if requested freq is 0 */
-  if (freq == 0  && _mclk.pin != -1) {
-    ledcDetachPin(_mclk.pin);
-    _mclk.pin = -1;
+  if (freq == 0  && mclkPin != -1) {
+    ledcDetachPin(mclkPin);
+    mclkPin = -1;
     return 0;
   }
 
   /* do nothing and return if mclk is already started */
-  if (_mclk.pin != -1) return 0;
+  if (mclkPin != -1) return 0;
 
   /* do a sanity check on the requested frequency */
   if (freq < 1 || freq > MAX_FREQ) return 0;
@@ -330,8 +327,7 @@ double WM8978::setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch
     ledcDetachPin(pin);
     return 0;
   }
-  _mclk.pin = pin;
-  _mclk.channel = ch;
+  mclkPin = pin;
   ledcWrite(ch, 1);
   return setfreq;
 }
