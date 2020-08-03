@@ -311,15 +311,17 @@ double WM8978::setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch
     uint8_t channel;
   } _mclk;
 
+  /* switch off mclk if freq is set to 0 */
   if (freq == 0  && _mclk.pin != -1) {
     ledcDetachPin(_mclk.pin);
     _mclk.pin = -1;
     return 0;
   }
 
-  if (freq < 1 || freq > MAX_FREQ) return 0;
-
+  /* do nothing and return if mclk is already started */
   if (_mclk.pin != -1) return 0;
+
+  if (freq < 1 || freq > MAX_FREQ) return 0;
 
   ledcAttachPin(pin, ch);
   double setfreq = ledcSetup(ch, freq, 1);
