@@ -300,36 +300,73 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
   Write_Reg(35, regval); //R18,EQ1设置
 }
 
-/* sets a clock signal on 'pin' with frequency 'freq' and use pwm channel 'ch' */
+static struct {
+  int pin{-1};
+  double freq;
+} mclk;
+
+static inline __attribute__((always_inline)) void _detachAndCleanup(const int8_t pin){
+  ledcDetachPin(pin);
+  mclk.pin = -1;
+}
+
+/* sets a clock signal on 'pin' with frequency 'freq' and (optional) use pwm channel 'ch' */
 /* returns the actual set frequency or 0 if an error occurs */
-/* calling this function with the frequency set to 0 will stop a running mclk signal (and return 0)*/
 double WM8978::setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch) {
   const double MAX_FREQ = 40 * 1000 * 1000;
 
-  static int mclkPin{-1}; // -1 means clock is not running
-
-  /* switch off mclk if requested freq is 0 */
-  if (freq == 0  && mclkPin != -1) {
-    ledcDetachPin(mclkPin);
-    mclkPin = -1;
+  /* do nothing and return if mclk is already started */
+  if (mclk.pin != -1) {
+    ESP_LOGE(TAG, "Could not start MCLK. MCLK already running.");
+    return 0;
+  }
+  /* do a sanity check on the requested pin */
+  if (pin < 0 || pin > 30) {
+    ESP_LOGE(TAG, "Could not start MCLK. Invalid pin request.");
     return 0;
   }
 
-  /* do nothing and return if mclk is already started */
-  if (mclkPin != -1) return 0;
-
   /* do a sanity check on the requested frequency */
-  if (freq < 1 || freq > MAX_FREQ) return 0;
+  if (freq < 1 || freq > MAX_FREQ) {
+    ESP_LOGE(TAG, "Could not start MCLK. Invalid frequency request.");
+    return 0;
+  }
+
+  /* do a sanity check on the requested channel */
+  if (ch < 0 || ch > 7) {
+    ESP_LOGE(TAG, "Could not start MCLK. Invalid channel request.");
+    return 0;
+  }
 
   ledcAttachPin(pin, ch);
   double setfreq = ledcSetup(ch, freq, 1);
   if (!setfreq) {
-    ledcDetachPin(pin);
+    ESP_LOGE(TAG, "Could not start ledc. Some error occured.");
+    _detachAndCleanup(mclk.pin);
     return 0;
   }
-  mclkPin = pin;
+  mclk.pin = pin;
+  mclk.freq = setfreq;
   ledcWrite(ch, 1);
   return setfreq;
+}
+
+bool WM8978::stopMCLK(const uint8_t pin, const uint8_t ch) {
+  if (mclk.pin == -1) {
+    ESP_LOGE(TAG, "Could not stop MCLK. No MCLK is running.");
+    return false;
+  }
+  if (mclk.pin == pin) {
+    _detachAndCleanup(mclk.pin);
+    return true;
+  }
+  ESP_LOGE(TAG, "Could not stop MCLK on pin %i because MCLK is running on pin %i.", pin, mclk.pin);
+  return false;
+}
+
+double WM8978::getMCLKfreq() {
+  if (mclk.pin == -1) return 0;
+  return mclk.freq;
 }
 
 bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency) {
