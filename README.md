@@ -2,11 +2,13 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e81fc45de095479cba43ecff7cf94b3b)](https://app.codacy.com/manual/CelliesProjects/wm8978-esp32?utm_source=github.com&utm_medium=referral&utm_content=CelliesProjects/wm8978-esp32&utm_campaign=Badge_Grade_Dashboard)
 
-Arduino IDE library for wm8978 codec on ESP32 mcu. Tested/works on M5stack Node
+Arduino IDE library for wm8978 codec on ESP32 mcu.
 
-### Use case:
-To enable `ESP_LOGx` messages on Serial compile with `Tools->Core Debug Level` set to `Info`.
+- Tested/works with a M5Stack Node on a M5Stack Grey base.
+- Does NOT work with a M5 Fire Base at the moment.
+<br>Not sure why and any help on that issue would be appreciated.
 
+### Example code:
 ```c++
 #include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 #include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
@@ -42,7 +44,7 @@ void setup() {
   else
     ESP_LOGI(TAG, "Set %.2fMHz clock signal on GPIO %i", retval / (1000.0 * 1000.0), I2S_MCLKPIN);
 
-  /* Setup wm8978 I2S interface */
+  /* Setup audio pin interface and select the Node pins*/
   audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN);
 
   WiFi.begin("xxx", "xxx");
@@ -62,3 +64,4 @@ void loop() {
   audio.loop();
 }
 ```
+To show `ESP_LOGx` messages on the Serial port, compile with `Tools->Core Debug Level` set to `Info`.
