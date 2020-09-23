@@ -4,9 +4,8 @@
 
 Arduino IDE library for wm8978 codec on ESP32 mcu.
 
-- Tested/works with a M5Stack Node on a M5Stack Grey base.
-- Does NOT work with a M5 Fire Base at the moment.
-<br>Not sure why and any help on that issue would be appreciated.
+- Tested/works with a M5Stack Node.
+
 
 ### Example code:
 ```c++
