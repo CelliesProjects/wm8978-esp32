@@ -300,14 +300,16 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
   Write_Reg(35, regval); //R18,EQ1设置
 }
 
+#define MCLK_NOT_SET -1
+
 static struct {
-  int pin{-1};
+  int pin{MCLK_NOT_SET};
   double freq;
 } mclk;
 
-static inline __attribute__((always_inline)) void _detachAndCleanup(const int8_t pin){
+static inline __attribute__((always_inline)) void _detachAndCleanup(const uint8_t pin){
   ledcDetachPin(pin);
-  mclk.pin = -1;
+  mclk.pin = MCLK_NOT_SET;
 }
 
 /* sets a clock signal on 'pin' with frequency 'freq' and (optional) use pwm channel 'ch' */
@@ -351,8 +353,8 @@ double WM8978::setPinMCLK(const uint8_t pin, const double freq, const uint8_t ch
   return setfreq;
 }
 
-bool WM8978::stopMCLK(const uint8_t pin, const uint8_t ch) {
-  if (mclk.pin == -1) {
+bool WM8978::stopMCLK(const uint8_t pin) {
+  if (mclk.pin == MCLK_NOT_SET) {
     ESP_LOGE(TAG, "Could not stop MCLK. No MCLK is running.");
     return false;
   }
@@ -365,8 +367,7 @@ bool WM8978::stopMCLK(const uint8_t pin, const uint8_t ch) {
 }
 
 double WM8978::getMCLKfreq() {
-  if (mclk.pin == -1) return 0;
-  return mclk.freq;
+  return (mclk.pin == MCLK_NOT_SET) ? 0 : mclk.freq;
 }
 
 bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency) {
