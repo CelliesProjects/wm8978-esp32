@@ -11,9 +11,8 @@
 #define I2S_DOUT     2
 #define I2S_DIN     34
 
-/* M5Stack WM8978 MCLK gpio number and frequency */
+/* M5Stack WM8978 MCLK gpio number */
 #define I2S_MCLKPIN  0
-#define I2S_MFREQ  (24 * 1000 * 1000)
 
 WM8978 dac;
 Audio audio;
@@ -25,15 +24,10 @@ void setup() {
     while (1) delay(100);
   }
 
-  /* Setup wm8978 MCLK on gpio - for example M5Stack Node needs this clock on gpio 0 */
-  double retval = dac.setPinMCLK(I2S_MCLKPIN, I2S_MFREQ);
-  if (!retval)
-    ESP_LOGE(TAG, "Could not set %.2fMHz clock signal on GPIO %i", I2S_MFREQ / (1000.0 * 1000.0), I2S_MCLKPIN);
-  else
-    ESP_LOGI(TAG, "Set %.2fMHz clock signal on GPIO %i", retval / (1000.0 * 1000.0), I2S_MCLKPIN);
+  /* Select I2S MCLK pin */
+  audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
-
-  /* Setup wm8978 I2S interface */
+  /* Setup wm8978 I2S pins */
   audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN);
 
   WiFi.begin("xxx", "xxx");
@@ -51,5 +45,4 @@ void setup() {
 
 void loop() {
   audio.loop();
-  //delay(1);
 }
