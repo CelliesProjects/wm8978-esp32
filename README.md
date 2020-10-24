@@ -9,7 +9,7 @@ Arduino IDE library for wm8978 codec on ESP32 mcu.
 
 ### Example code:
 ```c++
-include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
+#include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 #include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
 
 /* M5Stack Node WM8978 I2C pins */
@@ -25,8 +25,8 @@ include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 /* M5Stack WM8978 MCLK gpio number */
 #define I2S_MCLKPIN  0
 
+Audio audio(I2S_BCK, I2S_WS, I2S_DOUT);
 WM8978 dac;
-Audio audio;
 
 void setup() {
   /* Setup wm8978 I2C interface */
@@ -38,16 +38,11 @@ void setup() {
   /* Select I2S MCLK pin */
   audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
-  /* Setup wm8978 I2S pins */
-  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN);
-
   WiFi.begin("xxx", "xxx");
   while (!WiFi.isConnected()) {
     delay(10);
   }
-  ESP_LOGI(TAG, "Connected");
-
-  ESP_LOGI(TAG, "Starting MP3...\n");
+  ESP_LOGI(TAG, "Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
 
   dac.setSPKvol(40); /* max 63 */
@@ -57,5 +52,6 @@ void setup() {
 void loop() {
   audio.loop();
 }
+
 ```
 To show `ESP_LOGx` messages on the Serial port, compile with `Tools->Core Debug Level` set to `Info`.
