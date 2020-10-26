@@ -303,12 +303,18 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
 bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency) {
   ESP_LOGD(TAG, "WM8978 I2C init sda=%i scl=%i frequency=%i", sda, scl, frequency);
   if (!Wire.begin(sda, scl, frequency)) {
-    ESP_LOGE(TAG, "WM8978 Wire setup error");
+    ESP_LOGD(TAG, "Wire setup error");
+    return false;
+  }
+  Wire.beginTransmission(WM8978_ADDR);
+  uint8_t error = Wire.endTransmission();
+  if (error) {
+    ESP_LOGD(TAG, "No WM8978 @ I2C address: 0x%X", WM8978_ADDR);
     return false;
   }
   int err = Init();
   if (err) {
-    ESP_LOGE(TAG, "WM8978 I2C init err:%X", err);
+    ESP_LOGD(TAG, "WM8978 init err: 0x%X", err);
     return false;
   }
   cfgI2S(2, 0); //Philips 16bit
