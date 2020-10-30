@@ -8,6 +8,9 @@ Arduino IDE library for wm8978 codec on ESP32 mcu.
 
 
 ### Example code:
+
+#### Setup i2c and wm8978 in one call
+
 ```c++
 #include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 #include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
@@ -35,13 +38,14 @@ void setup() {
     while (1) delay(100);
   }
 
-  /* Select I2S MCLK pin */
-  audio.i2s_mclk_pin_select(I2S_MCLKPIN);
-
   WiFi.begin("xxx", "xxx");
   while (!WiFi.isConnected()) {
     delay(10);
   }
+
+  /* Start MCLK */
+  audio.i2s_mclk_pin_select(I2S_MCLKPIN);
+
   ESP_LOGI(TAG, "Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
 
@@ -54,4 +58,53 @@ void loop() {
 }
 
 ```
+
+#### Setup i2c and wm8978 separately
+
+```c++
+#include <Wire.h>
+#include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
+#include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
+
+/* M5Stack Node I2S pins */
+#define I2S_BCK      5
+#define I2S_WS      13
+#define I2S_DOUT     2
+#define I2S_DIN     34
+
+/* M5Stack WM8978 MCLK gpio number */
+#define I2S_MCLKPIN  0
+
+WM8978 dac;
+Audio audio(I2S_BCK, I2S_WS, I2S_DOUT);
+
+void setup() {
+
+  if (!Wire.begin(21, 22, 400000))
+    ESP_LOGE(TAG, "i2c setup error!");
+
+  if (!dac.begin())
+    ESP_LOGE(TAG, "WM8978 setup error!");
+
+
+  WiFi.begin("xxx", "xxx");
+  while (!WiFi.isConnected()) {
+    delay(10);
+  }
+
+  /* Start MCLK */
+  audio.i2s_mclk_pin_select(0);
+
+  ESP_LOGI(TAG, "Connected. Starting MP3...");
+  audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
+
+  dac.setSPKvol(40); /* max 63 */
+  dac.setHPvol(32, 32);
+}
+
+void loop() {
+  audio.loop();
+}
+```
+
 To show `ESP_LOGx` messages on the Serial port, compile with `Tools->Core Debug Level` set to `Info`.
