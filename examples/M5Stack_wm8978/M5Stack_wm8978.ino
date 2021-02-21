@@ -14,7 +14,7 @@
 /* M5Stack WM8978 MCLK gpio number */
 #define I2S_MCLKPIN  0
 
-Audio audio(I2S_BCK, I2S_WS, I2S_DOUT);
+Audio audio;
 WM8978 dac;
 
 void setup() {
@@ -24,6 +24,9 @@ void setup() {
     while (1) delay(100);
   }
 
+  /* set the i2s pins */
+  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT);
+  
   /* Select I2S MCLK pin */
   audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
