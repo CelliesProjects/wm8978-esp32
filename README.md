@@ -6,7 +6,6 @@ Arduino IDE library for wm8978 codec on ESP32 mcu.
 
 - Tested/works with a M5Stack Node.
 
-
 ### Example code:
 
 #### Setup i2c and wm8978 in one call
@@ -28,7 +27,7 @@ Arduino IDE library for wm8978 codec on ESP32 mcu.
 /* M5Stack WM8978 MCLK gpio number */
 #define I2S_MCLKPIN  0
 
-Audio audio(I2S_BCK, I2S_WS, I2S_DOUT);
+Audio audio;
 WM8978 dac;
 
 void setup() {
@@ -37,20 +36,22 @@ void setup() {
     ESP_LOGE(TAG, "Error setting up dac. System halted");
     while (1) delay(100);
   }
-
+  dac.setSPKvol(40); /* max 63 */
+  dac.setHPvol(32, 32);
+  
   WiFi.begin("xxx", "xxx");
   while (!WiFi.isConnected()) {
     delay(10);
   }
+
+  /* set i2s pins */
+  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT);
 
   /* Start MCLK */
   audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
   ESP_LOGI(TAG, "Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
-
-  dac.setSPKvol(40); /* max 63 */
-  dac.setHPvol(32, 32);
 }
 
 void loop() {
@@ -76,7 +77,7 @@ void loop() {
 #define I2S_MCLKPIN  0
 
 WM8978 dac;
-Audio audio(I2S_BCK, I2S_WS, I2S_DOUT);
+Audio audio;
 
 void setup() {
 
@@ -86,20 +87,22 @@ void setup() {
   if (!dac.begin())
     ESP_LOGE(TAG, "WM8978 setup error!");
 
+  dac.setSPKvol(40); /* max 63 */
+  dac.setHPvol(32, 32);
 
   WiFi.begin("xxx", "xxx");
   while (!WiFi.isConnected()) {
     delay(10);
   }
 
+  /* set i2s pins */
+  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT);
+
   /* Start MCLK */
-  audio.i2s_mclk_pin_select(0);
+  audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
   ESP_LOGI(TAG, "Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
-
-  dac.setSPKvol(40); /* max 63 */
-  dac.setHPvol(32, 32);
 }
 
 void loop() {
