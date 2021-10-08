@@ -300,6 +300,15 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
   Write_Reg(35, regval); //R18,EQ1设置
 }
 
+void WM8978::setHPF(uint8_t enable)
+{
+  uint16_t regval;
+
+  regval = WM8978::Read_Reg(14);
+  regval = (enable << 8);
+  Write_Reg(14, regval); //R14,high pass filter
+}
+
 
 bool WM8978::begin() {
   Wire.beginTransmission(WM8978_ADDR);

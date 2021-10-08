@@ -55,6 +55,7 @@ class WM8978
     void setEQ5(uint8_t cfreq, uint8_t gain);
     void setNoise(uint8_t enable, uint8_t gain);
     void setALC(uint8_t enable, uint8_t maxgain, uint8_t mingain);
+    void setHPF(uint8_t enable);
 
   private:
     uint8_t Init(void);
