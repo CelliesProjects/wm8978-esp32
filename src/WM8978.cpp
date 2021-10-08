@@ -305,7 +305,8 @@ void WM8978::setHPF(uint8_t enable)
   uint16_t regval;
 
   regval = WM8978::Read_Reg(14);
-  regval = (enable << 8);
+  regval &= ~(1 << 8);
+  regval |= (enable << 8);
   Write_Reg(14, regval); //R14,high pass filter
 }
 
