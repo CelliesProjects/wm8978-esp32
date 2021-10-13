@@ -56,7 +56,7 @@ uint8_t WM8978::Init(void)
   Write_Reg(48, 1 << 8);  //R48设置,PGABOOSTR,右通道MIC获得20倍增益
   Write_Reg(49, 1 << 1);  //R49,TSDEN,开启过热保护
   Write_Reg(10, 1 << 3);  //R10,SOFTMUTE关闭,128x采样,最佳SNR
-  Write_Reg(14, 1 << 3);  //R14,ADC 128x采样率
+  Write_Reg(14, 1 << 3 | 1 << 8);  //R14,ADC 128x采样率 and enable high pass filter (3.7Hz cut-off)
   return 0;
 }
 
@@ -298,6 +298,16 @@ void WM8978::setNoise(uint8_t enable, uint8_t gain)
   regval = (enable << 3);
   regval |= gain;   //设置增益
   Write_Reg(35, regval); //R18,EQ1设置
+}
+
+void WM8978::setHPF(uint8_t enable)
+{
+  uint16_t regval;
+
+  regval = WM8978::Read_Reg(14);
+  regval &= ~(1 << 8);
+  regval |= (enable << 8);
+  Write_Reg(14, regval); //R14,high pass filter
 }
 
 
