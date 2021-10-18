@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7bef2c7f6e0f4103ac73b2fea5449295)](https://www.codacy.com/gh/CelliesProjects/wm8978-esp32/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CelliesProjects/wm8978-esp32&amp;utm_campaign=Badge_Grade)
 
-Arduino IDE library for wm8978 codec on ESP32 mcu.
+Arduino IDE library for wm8978 dac on ESP32 mcu.
 
 - Tested/works with a M5Stack Node.
 
