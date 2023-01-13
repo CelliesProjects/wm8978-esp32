@@ -315,12 +315,12 @@ bool WM8978::begin() {
   Wire.beginTransmission(WM8978_ADDR);
   const uint8_t error = Wire.endTransmission();
   if (error) {
-    ESP_LOGE(TAG, "No WM8978 dac @ i2c address: 0x%X", WM8978_ADDR);
+    log_e("No WM8978 dac @ i2c address: 0x%X", WM8978_ADDR);
     return false;
   }
   const int err = Init();
   if (err) {
-    ESP_LOGE(TAG, "WM8978 init err: 0x%X", err);
+    log_e("WM8978 init err: 0x%X", err);
     return false;
   }
   cfgI2S(2, 0); //Philips 16bit
@@ -342,9 +342,8 @@ bool WM8978::begin() {
 }
 
 bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequency) {
-  ESP_LOGD(TAG, "i2c init sda=%i scl=%i frequency=%i", sda, scl, frequency);
   if (!Wire.begin(sda, scl, frequency)) {
-    ESP_LOGE(TAG, "Wire setup error sda=%i scl=%i frequency=%i", sda, scl, frequency);
+    log_e("Wire setup error sda=%i scl=%i frequency=%i", sda, scl, frequency);
     return false;
   }
   return begin();
