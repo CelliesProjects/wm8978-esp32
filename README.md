@@ -33,12 +33,12 @@ WM8978 dac;
 void setup() {
   /* Setup wm8978 I2C interface */
   if (!dac.begin(I2C_SDA, I2C_SCL)) {
-    ESP_LOGE(TAG, "Error setting up dac. System halted");
+    log_e("Error setting up dac. System halted");
     while (1) delay(100);
   }
   dac.setSPKvol(40); /* max 63 */
   dac.setHPvol(32, 32);
-  
+
   WiFi.begin("xxx", "xxx");
   while (!WiFi.isConnected()) {
     delay(10);
@@ -50,7 +50,7 @@ void setup() {
   /* Start MCLK */
   audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
-  ESP_LOGI(TAG, "Connected. Starting MP3...");
+  log_i("Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
 }
 
@@ -82,10 +82,10 @@ Audio audio;
 void setup() {
 
   if (!Wire.begin(21, 22, 400000))
-    ESP_LOGE(TAG, "i2c setup error!");
+    log_e("i2c setup error!");
 
   if (!dac.begin())
-    ESP_LOGE(TAG, "WM8978 setup error!");
+    log_e("WM8978 setup error!");
 
   dac.setSPKvol(40); /* max 63 */
   dac.setHPvol(32, 32);
@@ -101,7 +101,7 @@ void setup() {
   /* Start MCLK */
   audio.i2s_mclk_pin_select(I2S_MCLKPIN);
 
-  ESP_LOGI(TAG, "Connected. Starting MP3...");
+  log_i("Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
 }
 
@@ -110,4 +110,3 @@ void loop() {
 }
 ```
 
-To show `ESP_LOGx` messages on the Serial port, compile with `Tools->Core Debug Level` set to `Info`.
