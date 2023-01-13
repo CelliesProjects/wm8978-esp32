@@ -10,8 +10,6 @@
 #define I2S_WS 13
 #define I2S_DOUT 2
 #define I2S_DIN 34
-
-/* M5Stack WM8978 MCLK gpio number */
 #define I2S_MCLK 0
 
 Audio audio;
