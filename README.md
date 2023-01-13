@@ -2,9 +2,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7bef2c7f6e0f4103ac73b2fea5449295)](https://www.codacy.com/gh/CelliesProjects/wm8978-esp32/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CelliesProjects/wm8978-esp32&amp;utm_campaign=Badge_Grade)
 
-Arduino IDE library for wm8978 dac on ESP32 mcu.
-
-- Tested/works with a M5Stack Node.
+Arduino IDE library for wm8978 dac on ESP32 mcu. Tested/works with a M5Stack Node.
 
 ### Example code:
 
@@ -23,9 +21,7 @@ Arduino IDE library for wm8978 dac on ESP32 mcu.
 #define I2S_WS      13
 #define I2S_DOUT     2
 #define I2S_DIN     34
-
-/* M5Stack WM8978 MCLK gpio number */
-#define I2S_MCLKPIN  0
+#define I2S_MCLK     0
 
 Audio audio;
 WM8978 dac;
@@ -45,10 +41,7 @@ void setup() {
   }
 
   /* set i2s pins */
-  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT);
-
-  /* Start MCLK */
-  audio.i2s_mclk_pin_select(I2S_MCLKPIN);
+  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN, I2S_MCLK);
 
   log_i("Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
@@ -72,9 +65,7 @@ void loop() {
 #define I2S_WS      13
 #define I2S_DOUT     2
 #define I2S_DIN     34
-
-/* M5Stack WM8978 MCLK gpio number */
-#define I2S_MCLKPIN  0
+#define I2S_MCLK     0
 
 WM8978 dac;
 Audio audio;
@@ -96,10 +87,7 @@ void setup() {
   }
 
   /* set i2s pins */
-  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT);
-
-  /* Start MCLK */
-  audio.i2s_mclk_pin_select(I2S_MCLKPIN);
+  audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN, I2S_MCLK);
 
   log_i("Connected. Starting MP3...");
   audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
