@@ -60,6 +60,10 @@ void loop() {
 #include <WM8978.h> /* https://github.com/CelliesProjects/wm8978-esp32 */
 #include <Audio.h>  /* https://github.com/schreibfaul1/ESP32-audioI2S */
 
+/* M5Stack Node WM8978 I2C pins */
+#define I2C_SDA     21
+#define I2C_SCL     22
+
 /* M5Stack Node I2S pins */
 #define I2S_BCK      5
 #define I2S_WS      13
@@ -72,7 +76,7 @@ Audio audio;
 
 void setup() {
 
-  if (!Wire.begin(21, 22, 400000))
+  if (!Wire.begin(I2C_SDA, I2C_SCL, 400000))
     log_e("i2c setup error!");
 
   if (!dac.begin())
