@@ -364,3 +364,4 @@ bool WM8978::begin(const uint8_t sda, const uint8_t scl, const uint32_t frequenc
     }
     return begin();
 }
+test
