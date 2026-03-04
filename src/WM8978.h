@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define WM8978_ADDR 0X1A // WM8978 i2c address
+#define WM8978_ADDR 0X1A
 
 #define EQ1_80Hz 0X00
 #define EQ1_105Hz 0X01
