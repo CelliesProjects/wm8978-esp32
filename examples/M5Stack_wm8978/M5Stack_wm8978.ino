@@ -12,31 +12,61 @@
 #define I2S_DIN 34
 #define I2S_MCLK 0
 
-Audio audio;
+const char *SSID = "xxx"; 
+const char *PSK = "xxx"; 
+
 WM8978 dac;
 
-void setup() {
-    /* Setup wm8978 I2C interface */
-    if (!dac.begin(I2C_SDA, I2C_SCL)) {
-        log_e("Error setting up dac. System halted");
-        while (1) delay(100);
-    }
-
-    /* set the i2s pins */
-    audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_DIN, I2S_MCLK);
-
-    WiFi.begin("xxx", "xxx");
-    while (!WiFi.isConnected()) {
-        delay(10);
-    }
-    log_i("Connected. Starting MP3...");
-    audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
-
-    dac.setSPKvol(40); /* max 63 */
-    dac.setHPvol(32, 32);
+void audio_info(Audio::msg_t m)
+{
+    Serial.printf("%s: %s\n", m.s, m.msg);
 }
 
-void loop() {
-    audio.loop();
+void setup()
+{
+    Serial.begin(115200);
+    Serial.println("starting");
+
+    /* Setup wm8978 I2C interface */
+    if (!dac.begin(I2C_SDA, I2C_SCL))
+    {
+        Serial.println("Error setting up dac. System halted");
+        while (1)
+            delay(100);
+    }
+    dac.setSPKvol(40); /* max 63 */
+    dac.setHPvol(32, 32);
+
+    WiFi.begin(SSID, PSK);
+    WiFi.setSleep(false);
+    while (!WiFi.isConnected())
+        delay(10);
+    
+    Serial.println("Connected. Starting MP3...");
+
+    /* Setup audio */
+    Audio audio;
+
+    Audio::audio_info_callback = audio_info;
+
+    /* Set i2s pins */
+    audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_MCLK);
+    audio.setConnectionTimeout(5000, 5000);
+    audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
+
+    if (!audio.isRunning())
+        Serial.println("could not start stream");
+
+    audio.setVolume(20);
+
+    while (1)
+    {
+        vTaskDelay(25);
+        audio.loop();
+    }
+}
+
+void loop()
+{
 }
 
