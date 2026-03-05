@@ -1,5 +1,5 @@
 #######################################
-# syntax coloring map for sensorState
+# Syntax coloring map for WM8978
 #######################################
 
 #######################################
@@ -14,7 +14,7 @@ begin	KEYWORD2
 cfgADDA	KEYWORD2
 cfgInput	KEYWORD2
 cfgOutput	KEYWORD2
-cfgI2S	 KEYWORD2
+cfgI2S	KEYWORD2
 setMICgain	KEYWORD2
 setLINEINgain	KEYWORD2
 setAUXgain	KEYWORD2
@@ -29,14 +29,34 @@ setEQ4	KEYWORD2
 setEQ5	KEYWORD2
 setNoise	KEYWORD2
 setALC	KEYWORD2
-
-#######################################
-# Instances (KEYWORD2)
-######################################
-WM8978	KEYWORD3
+setHPF	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
 WM8978_ADDR	LITERAL1
 
+EQ1_80Hz	LITERAL1
+EQ1_105Hz	LITERAL1
+EQ1_135Hz	LITERAL1
+EQ1_175Hz	LITERAL1
+
+EQ2_230Hz	LITERAL1
+EQ2_300Hz	LITERAL1
+EQ2_385Hz	LITERAL1
+EQ2_500Hz	LITERAL1
+
+EQ3_650Hz	LITERAL1
+EQ3_850Hz	LITERAL1
+EQ3_1100Hz	LITERAL1
+EQ3_14000Hz	LITERAL1
+
+EQ4_1800Hz	LITERAL1
+EQ4_2400Hz	LITERAL1
+EQ4_3200Hz	LITERAL1
+EQ4_4100Hz	LITERAL1
+
+EQ5_5300Hz	LITERAL1
+EQ5_6900Hz	LITERAL1
+EQ5_9000Hz	LITERAL1
+EQ5_11700Hz	LITERAL1
