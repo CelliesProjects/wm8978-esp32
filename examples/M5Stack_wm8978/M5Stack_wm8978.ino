@@ -44,12 +44,12 @@ void setup()
     
     Serial.println("Connected. Starting MP3...");
 
-    /* Setup arduino-audio-tools */
+    /* Setup audio */
     Audio audio;
 
     Audio::audio_info_callback = audio_info;
 
-    /* set i2s pins */
+    /* Set i2s pins */
     audio.setPinout(I2S_BCK, I2S_WS, I2S_DOUT, I2S_MCLK);
     audio.setConnectionTimeout(5000, 5000);
     audio.connecttohost("http://icecast.omroep.nl/3fm-bb-mp3");
